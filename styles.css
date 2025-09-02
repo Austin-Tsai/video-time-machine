@@ -1,0 +1,27 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 95vw;
+    height: 92.5vh;
+    text-align: center;
+}
+
+.speed, .skip {
+    display: flex;
+    flex-direction: row;
+    flex: auto;
+}
+
+.default-speed, .toggle-speed, .toggle-key, .skip-amount, .skip-back, .skip-forward {
+    margin: 10%;
+    width: 40%;
+    height: auto
+}
+
+.pair-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5
+}

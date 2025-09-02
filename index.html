@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css" />
+    <title>Video Time Machine</title>
+</head>
+<body>
+    <div class="container">
+        <div class="speed">
+            <div class="pair-container">
+                <label for="default-speed">Default Speed</label>
+                <input class="default-speed" name="default-speed" type="number" min=0 step = .1 value = 1>
+            </div>
+            <div class="pair-container">
+                <label for="toggle-speed">Toggled Speed</label>
+                <input class="toggle-speed" name="toggle-speed" type="number" min=0 step = .1 value = 1.5>
+            </div>
+            <div class="pair-container">
+                <label for="toggle-key">Toggle Key</label>
+                <input class="toggle-key" name="toggle-key" type="text" maxlength=1 value="s">
+            </div>
+        </div>
+        <div class="skip">
+            <div class="pair-container">
+                <label for="skip-amount">Skip Amount</label>
+                <input class="skip-amount" name="skip-amount" type="number" min=0 step = .1 value = 5>
+            </div>
+            <div class="pair-container">
+                <label for="skip-back">Skip Back Key</label>
+                <input class="skip-back" name="skip-back" type="text" maxlength=1 value="a">
+            </div>
+             <div class="pair-container">
+                <label for="skip-forward">Skip Forward Key</label>
+                <input class="skip-forward" name="skip-forward" type="text" maxlength=1 value="d">
+            </div>
+        </div>
+        <div class="save">
+            <button class="save-button">Save Settings</button>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

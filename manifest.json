@@ -1,0 +1,17 @@
+{
+  "name": "Video Time Machine",
+  "description": "Allows you to toggle the speed and skip forward/backward on all HTML5 videos",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "video-time-machine-16.png"
+  },
+  "permissions": ["storage", "scripting", "activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
