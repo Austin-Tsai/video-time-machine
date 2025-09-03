@@ -1,46 +1,75 @@
-// Utility to set video speed
-function setVideoSpeed(speed) {
-  document.querySelectorAll("video").forEach(video => {
-    video.playbackRate = speed;
-  });
+const settings = {
+  defaultSpeed : 1.0,
+  toggleSpeed : 1.5,
+  toggleKey : "s",
+  skipAmount : 5.0,
+  skipBack : "a",
+  skipForward : "d",
+  toggled : false,
 }
 
-// Load settings and set up listeners
-chrome.storage.local.get(["defaultSpeed", "toggleSpeed", "toggleKey", "skipAmount", "skipBack", "skipForward"], (settings) => {
-    const defaultSpeed = settings.defaultSpeed || 1.0;
-    const toggleSpeed  = settings.toggleSpeed  || 1.5;
-    const toggleKey    = settings.toggleKey || "s"; // fallback key
-    const skipAmount = settings.skipAmount || 5.0;
-    const skipBack    = settings.skipBack || "a"; // fallback key
-    const skipForward    = settings.skipForwards || "d"; // fallback key
-    
-  // Apply default speed when page loads
-  setVideoSpeed(defaultSpeed);
+setVideoSpeed = (speed) => {
+document.querySelectorAll("video").forEach(video => {
+    if (video.playbackRate == settings.defaultSpeed) video.playbackRate = settings.toggleSpeed;
+    else video.playbackRate = settings.defaultSpeed;
+    settings.toggled = !settings.toggled;
+});
+}
 
-  // Toggle speed when key is pressed
-  document.addEventListener("keydown", (e) => {
-    if (e.key === toggleKey) {
-        document.querySelectorAll("video").forEach(video => {
-            if (video.playbackRate == defaultSpeed) video.playbackRate = toggleSpeed;
-            else video.playbackRate = defaultSpeed;
-        });
-    }
-    else if (e.key === skipBack) {
-        document.querySelectorAll("video").forEach(video => {
-            video.currentTime -= skipAmount;
-        });
-    }
-    else if (e.key === skipForward) {
-        document.querySelectorAll("video").forEach(video => {
-            video.currentTime += skipAmount;
-        });
-    }
-  });
+// load saved settings
+chrome.storage.local.get(["defaultSpeed", "toggleSpeed", "toggleKey", "skipAmount", "skipBack", "skipForward"], (saved) => {
+  if (saved.defaultSpeed) settings.defaultSpeed = saved.defaultSpeed;
+  if (saved.toggleSpeed) settings.toggleSpeed = saved.toggleSpeed;
+  if (saved.toggleKey) settings.toggleKey = saved.toggleKey;
+  if (saved.skipAmount) settings.skipAmount = saved.skipAmount;
+  if (saved.skipBack) settings.skipBack = saved.skipBack;
+  if (saved.skipForward) settings.skipForward = saved.skipForward;
+  
+  // initialize video speed
+  setVideoSpeed(defaultSpeed);
 });
 
-// Update video speeds live if settings change from popup
+// update settings live if settings change from popup
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.defaultSpeed) {
-    setVideoSpeed(parseFloat(changes.defaultSpeed.newValue));
+if (area === "local")
+  if (changes.defaultSpeed) {
+    settings.defaultSpeed = changes.defaultSpeed.newValue;
+
+    // update speed of videos if currently in default speed
+    if (!settings.toggled) {
+      document.querySelectorAll("video").forEach(video => {
+        video.playbackRate = settings.defaultSpeed;
+      });
+    }
+  }
+  if (changes.toggleSpeed) {
+    settings.toggleSpeed = changes.toggleSpeed.newValue;
+
+    // update speed of videos if currently in toggled speed
+    if (settings.toggled) {
+      document.querySelectorAll("video").forEach(video => {
+        video.playbackRate = settings.toggleSpeed;
+      });
+    }
+  }
+  if (changes.toggleKey) settings.toggleKey = changes.toggleKey.newValue;
+  if (changes.skipAmount) settings.skipAmount = changes.skipAmount.newValue;
+  if (changes.skipBack) settings.skipBack = changes.skipBack.newValue;
+  if (changes.skipForward) settings.skipForward = changes.skipForward.newValue;
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === settings.toggleKey) {
+      setVideoSpeed();
+  }
+  else if (e.key === settings.skipBack) {
+      document.querySelectorAll("video").forEach(video => {
+          video.currentTime -= settings.skipAmount;
+      });
+  }
+  else if (e.key === settings.skipForward) {
+      document.querySelectorAll("video").forEach(video => {
+          video.currentTime += settings.skipAmount;
+      });
   }
 });
