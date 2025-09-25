@@ -3,9 +3,18 @@
   "description": "Allows you to toggle the speed and skip forward/backward on all HTML5 videos with simple key presses",
   "version": "1.0",
   "manifest_version": 3,
+  "icons": {
+    "16": "video-time-machine-16.png",
+    "48": "video-time-machine-48.png",
+    "128": "video-time-machine-128.png"
+  },
   "action": {
-    "default_popup": "index.html",
-    "default_icon": "video-time-machine-16.png"
+    "default_icon": {
+      "16": "video-time-machine-16.png",
+      "48": "video-time-machine-48.png",
+      "128": "video-time-machine-128.png"
+    },
+    "default_popup": "index.html"
   },
   "permissions": ["storage", "scripting", "activeTab"],
   "content_scripts": [
