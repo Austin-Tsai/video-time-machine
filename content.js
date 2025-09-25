@@ -9,37 +9,34 @@ const settings = {
 }
 
 setVideoSpeed = (speed) => {
-document.querySelectorAll("video").forEach(video => {
-    if (video.playbackRate == settings.defaultSpeed) video.playbackRate = settings.toggleSpeed;
-    else video.playbackRate = settings.defaultSpeed;
-    settings.toggled = !settings.toggled;
-});
+  document.querySelectorAll("video").forEach(video => {
+      video.playbackRate = speed;
+  });
 }
 
 // load saved settings
-chrome.storage.local.get(["defaultSpeed", "toggleSpeed", "toggleKey", "skipAmount", "skipBack", "skipForward"], (saved) => {
-  if (saved.defaultSpeed) settings.defaultSpeed = saved.defaultSpeed;
-  if (saved.toggleSpeed) settings.toggleSpeed = saved.toggleSpeed;
-  if (saved.toggleKey) settings.toggleKey = saved.toggleKey;
-  if (saved.skipAmount) settings.skipAmount = saved.skipAmount;
-  if (saved.skipBack) settings.skipBack = saved.skipBack;
-  if (saved.skipForward) settings.skipForward = saved.skipForward;
-  
-  // initialize video speed
-  setVideoSpeed(defaultSpeed);
+window.addEventListener("load", () => {
+  chrome.storage.local.get(["defaultSpeed", "toggleSpeed", "toggleKey", "skipAmount", "skipBack", "skipForward"], (saved) => {
+    if (saved.defaultSpeed) settings.defaultSpeed = saved.defaultSpeed;
+    if (saved.toggleSpeed) settings.toggleSpeed = saved.toggleSpeed;
+    if (saved.toggleKey) settings.toggleKey = saved.toggleKey;
+    if (saved.skipAmount) settings.skipAmount = saved.skipAmount;
+    if (saved.skipBack) settings.skipBack = saved.skipBack;
+    if (saved.skipForward) settings.skipForward = saved.skipForward;
+    
+    // initialize video speed
+    setVideoSpeed(settings.defaultSpeed);
+  });
 });
 
 // update settings live if settings change from popup
 chrome.storage.onChanged.addListener((changes, area) => {
-if (area === "local")
   if (changes.defaultSpeed) {
     settings.defaultSpeed = changes.defaultSpeed.newValue;
 
     // update speed of videos if currently in default speed
     if (!settings.toggled) {
-      document.querySelectorAll("video").forEach(video => {
-        video.playbackRate = settings.defaultSpeed;
-      });
+      setVideoSpeed(settings.defaultSpeed);
     }
   }
   if (changes.toggleSpeed) {
@@ -47,9 +44,7 @@ if (area === "local")
 
     // update speed of videos if currently in toggled speed
     if (settings.toggled) {
-      document.querySelectorAll("video").forEach(video => {
-        video.playbackRate = settings.toggleSpeed;
-      });
+      setVideoSpeed(settings.toggleSpeed);
     }
   }
   if (changes.toggleKey) settings.toggleKey = changes.toggleKey.newValue;
@@ -69,7 +64,9 @@ document.addEventListener("keydown", (e) => {
   }
 
   if (e.key === settings.toggleKey) {
-    setVideoSpeed();
+    if (settings.toggled) setVideoSpeed(settings.defaultSpeed);
+    else setVideoSpeed(settings.toggleSpeed);
+    settings.toggled = !settings.toggled;
   }
   else if (e.key === settings.skipBack) {
     document.querySelectorAll("video").forEach(video => {
@@ -82,3 +79,15 @@ document.addEventListener("keydown", (e) => {
     });
   }
 });
+
+
+// watch for url change to apply default speed since some websites like YouTube don't reload the DOM
+let lastUrl = location.href;
+new MutationObserver(() => {
+  if (location.href !== lastUrl) {
+    lastUrl = location.href;;
+    const videos = document.querySelectorAll("video");
+    settings.toggled = false;
+    setTimeout(() => setVideoSpeed(settings.defaultSpeed), 500);
+  }
+}).observe(document, {subtree: true, childList: true});
