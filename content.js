@@ -59,17 +59,26 @@ if (area === "local")
 });
 
 document.addEventListener("keydown", (e) => {
+  // if typing, don't mess with videos
+  if (
+    e.target.tagName === "INPUT" ||
+    e.target.tagName === "TEXTAREA" ||
+    e.target.isContentEditable
+  ) {
+    return;
+  }
+
   if (e.key === settings.toggleKey) {
-      setVideoSpeed();
+    setVideoSpeed();
   }
   else if (e.key === settings.skipBack) {
-      document.querySelectorAll("video").forEach(video => {
-          video.currentTime -= settings.skipAmount;
-      });
+    document.querySelectorAll("video").forEach(video => {
+      video.currentTime -= settings.skipAmount;
+    });
   }
   else if (e.key === settings.skipForward) {
-      document.querySelectorAll("video").forEach(video => {
-          video.currentTime += settings.skipAmount;
-      });
+    document.querySelectorAll("video").forEach(video => {
+      video.currentTime += settings.skipAmount;
+    });
   }
 });
