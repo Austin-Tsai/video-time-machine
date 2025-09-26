@@ -7,8 +7,9 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    width: 96vw;
-    height: 93vh;
+    padding: 1rem;
+    width: 24rem; 
+    margin: 0 auto;
     text-align: center;
 }
 
@@ -16,12 +17,19 @@ body {
     display: flex;
     flex-direction: row;
     flex: auto;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.speed:last-child, .skip:last-child {
+    margin-bottom: 0;
 }
 
 .default-speed, .toggle-speed, .toggle-key, .skip-amount, .skip-back, .skip-forward {
-    margin: 10%;
-    width: 40%;
-    height: auto
+    margin: 0.5rem;
+    width: 60%;
 }
 
 .pair-container {
@@ -32,34 +40,41 @@ body {
     gap: 5px
 }
 
+label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #f0f0f0;
+}
+
 input {
     background-color: #bac7ca;
     border: 2px solid rgb(47, 41, 73);
-    border-radius: 25%;
+    border-radius: 8px;
     text-align: center;
+    font-size: 1rem;
 }
 
 input:hover, input:focus {
     background-color: #ccd7da;
-    transform: scale(1.05);
     box-shadow: 0 0 5px rgba(154, 153, 189, 0.5);
-
 }
 
-.outlined-white, input{
-  color: #ffffff;
-  text-shadow: -1px -1px 0 #000000, 0 -1px 0 #000000, 1px -1px 0 #000000, 1px 0 0 #000000,
-    1px 1px 0 #000000, 0 1px 0 #000000, -1px 1px 0 #000000, -1px 0 0 #000000;
+input:hover {
+    transform: scale(1.05);
+    transition: all 0.2s ease;
 }
 
 button {
     background-color: #adadad;
     border: 2px solid rgb(95, 93, 105);
-    border-radius: 15%;
+    border-radius: 8px;
     text-align: center;
-    width: 35%;
+    width: 100%;
+    max-width: 150px;
     padding: 2%;
-    margin-bottom: 5%;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 button:hover {
@@ -70,5 +85,11 @@ button:hover {
 
 input:focus,
 button:focus {
-  outline: none;
+    outline: none;
+}
+
+.outlined-white, input{
+    color: #ffffff;
+    text-shadow: -1px -1px 0 #000000, 0 -1px 0 #000000, 1px -1px 0 #000000, 1px 0 0 #000000,
+    1px 1px 0 #000000, 0 1px 0 #000000, -1px 1px 0 #000000, -1px 0 0 #000000;
 }
