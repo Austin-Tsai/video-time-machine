@@ -88,6 +88,6 @@ new MutationObserver(() => {
     lastUrl = location.href;;
     const videos = document.querySelectorAll("video");
     settings.toggled = false;
-    setTimeout(() => setVideoSpeed(settings.defaultSpeed), 500);
+    setTimeout(() => setVideoSpeed(settings.defaultSpeed), 0);
   }
 }).observe(document, {subtree: true, childList: true});
